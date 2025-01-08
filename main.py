@@ -99,12 +99,13 @@ def main():
     # Training setup
     criterion = nn.NLLLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-5)
+    epochs = 30
     
     # Modified scheduler parameters
     scheduler = OneCycleLR(
         optimizer,
         max_lr=0.1,
-        epochs=24,
+        epochs=epochs,
         steps_per_epoch=len(train_loader),
         pct_start=0.3,
         anneal_strategy='cos',
@@ -112,7 +113,6 @@ def main():
         final_div_factor=1e4
     )
     
-    epochs = 30
     
     for epoch in range(epochs):
         train_acc = train(model, device, train_loader, optimizer, criterion, scheduler)

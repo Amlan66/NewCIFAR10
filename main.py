@@ -112,28 +112,15 @@ def main():
         final_div_factor=1e4
     )
     
-    # Training loop with early stopping
-    best_acc = 0
-    patience = 3
-    patience_counter = 0
+    epochs = 30
     
-    for epoch in range(24):
+    for epoch in range(epochs):
         train_acc = train(model, device, train_loader, optimizer, criterion, scheduler)
         test_loss, test_acc = test(model, device, test_loader, criterion)
         
-        print(f'Epoch {epoch}: Train Acc: {train_acc:.2f}%, Test Loss: {test_loss:.4f}, Test Acc: {test_acc:.2f}%')
+        print(f'Epoch {epoch+1}: Train Acc: {train_acc:.2f}%, Test Loss: {test_loss:.4f}, Test Acc: {test_acc:.2f}%')
         
-        # Early stopping
-        if test_acc > best_acc:
-            best_acc = test_acc
-            patience_counter = 0
-            # Save best model
-            torch.save(model.state_dict(), 'best_model.pth')
-        else:
-            patience_counter += 1
-            if patience_counter >= patience:
-                print(f'Early stopping triggered. Best test accuracy: {best_acc:.2f}%')
-                break
+    
 
 if __name__ == '__main__':
     main()

@@ -98,15 +98,42 @@ def main():
     
     # Training setup
     criterion = nn.NLLLoss()
-    optimizer = optim.Adam(model.parameters(), lr=0.01)
-    scheduler = OneCycleLR(optimizer, max_lr=0.01, epochs=24,
-                          steps_per_epoch=len(train_loader))
+    optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-5)
     
-    # Training loop
+    # Modified scheduler parameters
+    scheduler = OneCycleLR(
+        optimizer,
+        max_lr=0.1,
+        epochs=24,
+        steps_per_epoch=len(train_loader),
+        pct_start=0.3,
+        anneal_strategy='cos',
+        div_factor=25,
+        final_div_factor=1e4
+    )
+    
+    # Training loop with early stopping
+    best_acc = 0
+    patience = 3
+    patience_counter = 0
+    
     for epoch in range(24):
         train_acc = train(model, device, train_loader, optimizer, criterion, scheduler)
         test_loss, test_acc = test(model, device, test_loader, criterion)
+        
         print(f'Epoch {epoch}: Train Acc: {train_acc:.2f}%, Test Loss: {test_loss:.4f}, Test Acc: {test_acc:.2f}%')
+        
+        # Early stopping
+        if test_acc > best_acc:
+            best_acc = test_acc
+            patience_counter = 0
+            # Save best model
+            torch.save(model.state_dict(), 'best_model.pth')
+        else:
+            patience_counter += 1
+            if patience_counter >= patience:
+                print(f'Early stopping triggered. Best test accuracy: {best_acc:.2f}%')
+                break
 
 if __name__ == '__main__':
     main()

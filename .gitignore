@@ -1,42 +1,114 @@
-# Virtual Environment
-venv/
-env/
-.env/
-.venv/
-
-# Data folders
-data/
-dataset/
-datasets/
-raw_data/
-
-# Images
-*.png
-*.jpg
-*.jpeg
-*.gif
-*.bmp
-*.tiff
-*.ico
-*.svg
-
-# Analysis files
-analysis.txt
-*.csv
-*.xlsx
-*.xls
-
-# Python cache files
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 
-# Jupyter Notebook
-.ipynb_checkpoints
-*.ipynb_checkpoints/
+# PyTorch specific
+*.pth
+*.pt
+*.ckpt
+*.pkl
+model_checkpoints/
+runs/
+*.onnx
 
-# IDE specific files
+# Dataset
+data/
+datasets/
+imagenet/
+*.tar
+*.zip
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.tif
+*.tiff
+
+# Logs and results
+logs/
+results/
+tensorboard/
+wandb/
+*.log
+*.csv
+*.json
+
+# IDE specific
 .idea/
 .vscode/
 *.swp
-*.swo 
+*.swo
+*~
+
+# Environment
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.python-version
+
+# OS specific
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# Distribution / packaging
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Profiling
+*.prof 
+
+# AWS CDK
+cdk.out/      
+node_modules/
+
+# Pyc
+*.pyc
+
+#PEM
+*.pem

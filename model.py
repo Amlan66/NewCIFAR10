@@ -34,15 +34,15 @@ class CIFAR10Net(nn.Module):
         self.pointwise = nn.Conv2d(128, 256, kernel_size=1)
         self.block4_bn = nn.BatchNorm2d(256)
         self.block4_relu = nn.ReLU()
-        self.block4_dropout = nn.Dropout(0.1)
+        self.block4_dropout = nn.Dropout(0.2)
         
         # Global Average Pooling
         self.gap = nn.AdaptiveAvgPool2d(1)
         
-        # Final FC Layer with Softmax
+        # Final FC Layer with LogSoftmax
         self.fc = nn.Sequential(
             nn.Linear(256, 10),
-            nn.Softmax(dim=1)
+            nn.LogSoftmax(dim=1)
         )
 
     def forward(self, x):

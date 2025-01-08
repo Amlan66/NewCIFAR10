@@ -86,31 +86,49 @@ def main():
     summary(model, (3, 32, 32))
     
     # Dataset and DataLoader
-    train_transform, test_transform = get_transforms()
+    train_transform = A.Compose([
+        A.HorizontalFlip(p=0.5),
+        A.ShiftScaleRotate(shift_limit=0.1, scale_limit=0.1, rotate_limit=15, p=0.5),
+        A.CoarseDropout(max_holes=1, max_height=16, max_width=16, 
+                       min_holes=1, min_height=16, min_width=16,
+                       fill_value=CIFAR10_MEAN, p=0.5),
+        A.RandomBrightnessContrast(p=0.2),
+        A.Normalize(mean=CIFAR10_MEAN, std=CIFAR10_STD),
+        ToTensorV2()
+    ])
+    
+    test_transform = A.Compose([
+        A.Normalize(mean=CIFAR10_MEAN, std=CIFAR10_STD),
+        ToTensorV2()
+    ])
     
     train_dataset = datasets.CIFAR10(root='./data', train=True, download=True,
                                    transform=lambda x: train_transform(image=np.array(x))["image"])
     test_dataset = datasets.CIFAR10(root='./data', train=False,
                                   transform=lambda x: test_transform(image=np.array(x))["image"])
     
-    train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
-    test_loader = DataLoader(test_dataset, batch_size=64)
+    train_loader = DataLoader(train_dataset, batch_size=128, shuffle=True,
+                            num_workers=4, pin_memory=True)
+    test_loader = DataLoader(test_dataset, batch_size=128,
+                           num_workers=4, pin_memory=True)
     
     # Training setup
     criterion = nn.NLLLoss()
-    optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-4)
-    total_epochs = 50
+    optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-4, 
+                         betas=(0.9, 0.999), eps=1e-08)
+    total_epochs = 200
     
     # Modified scheduler parameters
     scheduler = OneCycleLR(
         optimizer,
-        max_lr=0.1,
+        max_lr=0.01,
         epochs=total_epochs,
         steps_per_epoch=len(train_loader),
         pct_start=0.2,
         anneal_strategy='cos',
-        div_factor=10,
-        final_div_factor=100
+        div_factor=25,
+        final_div_factor=1e4,
+        three_phase=True
     )
     
     for epoch in range(total_epochs):

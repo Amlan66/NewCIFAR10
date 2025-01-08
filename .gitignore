@@ -1,0 +1,42 @@
+# Virtual Environment
+venv/
+env/
+.env/
+.venv/
+
+# Data folders
+data/
+dataset/
+datasets/
+raw_data/
+
+# Images
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.tiff
+*.ico
+*.svg
+
+# Analysis files
+analysis.txt
+*.csv
+*.xlsx
+*.xls
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo 

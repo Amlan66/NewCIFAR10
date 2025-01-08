@@ -93,33 +93,32 @@ def main():
     test_dataset = datasets.CIFAR10(root='./data', train=False,
                                   transform=lambda x: test_transform(image=np.array(x))["image"])
     
-    train_loader = DataLoader(train_dataset, batch_size=128, shuffle=True)
-    test_loader = DataLoader(test_dataset, batch_size=128)
+    train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
+    test_loader = DataLoader(test_dataset, batch_size=64)
     
     # Training setup
     criterion = nn.NLLLoss()
-    optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-5)
-    epochs = 30
+    optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-4)
+    total_epochs = 50
     
     # Modified scheduler parameters
     scheduler = OneCycleLR(
         optimizer,
         max_lr=0.1,
-        epochs=epochs,
+        epochs=total_epochs,
         steps_per_epoch=len(train_loader),
-        pct_start=0.3,
+        pct_start=0.2,
         anneal_strategy='cos',
-        div_factor=25,
-        final_div_factor=1e4
+        div_factor=10,
+        final_div_factor=100
     )
     
-    
-    for epoch in range(epochs):
+    for epoch in range(total_epochs):
         train_acc = train(model, device, train_loader, optimizer, criterion, scheduler)
         test_loss, test_acc = test(model, device, test_loader, criterion)
         
-        print(f'Epoch {epoch+1}: Train Acc: {train_acc:.2f}%, Test Loss: {test_loss:.4f}, Test Acc: {test_acc:.2f}%')
-        
+        print(f'Epoch {epoch+1}/{total_epochs}: Train Acc: {train_acc:.2f}%, '
+              f'Test Loss: {test_loss:.4f}, Test Acc: {test_acc:.2f}%')
     
 
 if __name__ == '__main__':

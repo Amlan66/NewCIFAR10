@@ -7,32 +7,32 @@ class CIFAR10Net(nn.Module):
         
         # Block 1: Regular Conv (RF: 3)
         self.block1 = nn.Sequential(
-            nn.Conv2d(3, 64, kernel_size=3, padding=1),
-            nn.BatchNorm2d(64),
+            nn.Conv2d(3, 32, kernel_size=3, padding=1),
+            nn.BatchNorm2d(32),
             nn.ReLU(),
             nn.Dropout(0.1)
         )
         
         # Block 2: Strided Conv (RF: 7)
         self.block2 = nn.Sequential(
-            nn.Conv2d(64, 128, kernel_size=3, stride=2, padding=1),
-            nn.BatchNorm2d(128),
+            nn.Conv2d(32, 64, kernel_size=3, stride=2, padding=1),
+            nn.BatchNorm2d(64),
             nn.ReLU(),
             nn.Dropout(0.1)
         )
         
         # Block 3: Dilated Conv (RF: 23)
         self.block3 = nn.Sequential(
-            nn.Conv2d(128, 192, kernel_size=3, padding=4, dilation=4),
-            nn.BatchNorm2d(192),
+            nn.Conv2d(64, 128, kernel_size=3, padding=4, dilation=4),
+            nn.BatchNorm2d(128),
             nn.ReLU(),
             nn.Dropout(0.15),
-            nn.Conv2d(192, 192, kernel_size=1)
+            nn.Conv2d(128, 128, kernel_size=1)
         )
         
         # Block 4: Depthwise Separable Conv with stride (RF: 47)
-        self.depthwise = nn.Conv2d(192, 192, kernel_size=3, padding=1, groups=192, stride=2)
-        self.pointwise = nn.Conv2d(192, 256, kernel_size=1)
+        self.depthwise = nn.Conv2d(128, 128, kernel_size=3, padding=1, groups=128, stride=2)
+        self.pointwise = nn.Conv2d(128, 256, kernel_size=1)
         self.block4_bn = nn.BatchNorm2d(256)
         self.block4_relu = nn.ReLU()
         self.block4_dropout = nn.Dropout(0.2)

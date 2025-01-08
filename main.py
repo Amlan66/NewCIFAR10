@@ -85,7 +85,6 @@ def main():
     # Print model summary
     summary(model, (3, 32, 32))
     
-    # Dataset and DataLoader
     train_transform = A.Compose([
         A.HorizontalFlip(p=0.5),
         A.ShiftScaleRotate(shift_limit=0.1, scale_limit=0.1, rotate_limit=15, p=0.5),
@@ -114,9 +113,8 @@ def main():
     
     # Training setup
     criterion = nn.NLLLoss()
-    optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-4, 
-                         betas=(0.9, 0.999), eps=1e-08)
-    total_epochs = 200
+    optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-4)
+    total_epochs = 50
     
     # Modified scheduler parameters
     scheduler = OneCycleLR(

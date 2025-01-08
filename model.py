@@ -10,6 +10,9 @@ class CIFAR10Net(nn.Module):
             nn.Conv2d(3, 32, kernel_size=3, padding=1),
             nn.BatchNorm2d(32),
             nn.ReLU(),
+            nn.Conv2d(32, 32, kernel_size=3, padding=1),
+            nn.BatchNorm2d(32),
+            nn.ReLU(),
             nn.Dropout(0.1)
         )
         
@@ -18,22 +21,25 @@ class CIFAR10Net(nn.Module):
             nn.Conv2d(32, 64, kernel_size=3, stride=2, padding=1),
             nn.BatchNorm2d(64),
             nn.ReLU(),
+            nn.Conv2d(64, 64, kernel_size=3, padding=1),
+            nn.BatchNorm2d(64),
+            nn.ReLU(),
             nn.Dropout(0.1)
         )
         
         # Block 3: Dilated Conv (RF: 23)
         self.block3 = nn.Sequential(
-            nn.Conv2d(64, 128, kernel_size=3, padding=4, dilation=4),
-            nn.BatchNorm2d(128),
+            nn.Conv2d(64, 96, kernel_size=3, padding=4, dilation=4),
+            nn.BatchNorm2d(96),
             nn.ReLU(),
             nn.Dropout(0.15),
-            nn.Conv2d(128, 128, kernel_size=1)
+            nn.Conv2d(96, 96, kernel_size=1)
         )
         
         # Block 4: Depthwise Separable Conv with stride (RF: 47)
-        self.depthwise = nn.Conv2d(128, 128, kernel_size=3, padding=1, groups=128, stride=2)
-        self.pointwise = nn.Conv2d(128, 256, kernel_size=1)
-        self.block4_bn = nn.BatchNorm2d(256)
+        self.depthwise = nn.Conv2d(96, 96, kernel_size=3, padding=1, groups=96, stride=2)
+        self.pointwise = nn.Conv2d(96, 192, kernel_size=1)
+        self.block4_bn = nn.BatchNorm2d(192)
         self.block4_relu = nn.ReLU()
         self.block4_dropout = nn.Dropout(0.2)
         
@@ -42,7 +48,7 @@ class CIFAR10Net(nn.Module):
         
         # Final FC Layer with LogSoftmax
         self.fc = nn.Sequential(
-            nn.Linear(256, 10),
+            nn.Linear(192, 10),
             nn.LogSoftmax(dim=1)
         )
 
